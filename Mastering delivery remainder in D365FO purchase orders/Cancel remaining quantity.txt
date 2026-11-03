@@ -1,0 +1,17 @@
+// The callerPurchLine is the table buffer for which the quantity needs to be cancelled
+
+// We subtract the cancelled quantity from the RemainPurchPhysical and RemainInventPhysical quantities of the purchase line and assign the residual values back to the buffer for processing
+callerPurchLine.RemainPurchPhysical = callerPurchLine.RemainPurchPhysical - cancelledQuantity;
+callerPurchLine.RemainInventPhysical = callerPurchLine.RemainInventPhysical - cancelledQuantity;
+
+InventQty diffRemainPurchPhysical = cancelledQuantity;
+InventQty diffRemainInventPhysical = cancelledQuantity;
+PdsCWInventQty diffPdsCWRemainInventPhysical = cancelledQuantity;
+
+InterCompanyUpdateRemPhys::synchronize(_callerPurchLine, 
+ diffRemainInventPhysical,
+ diffRemainPurchPhysical,
+ InterCompanySkipUpdate::No,
+ diffPdsCWRemainInventPhysical);
+
+_callerPurchLine.write();
